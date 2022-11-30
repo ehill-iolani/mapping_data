@@ -3,6 +3,7 @@ library(leaflet)
 library(sf)
 library(dplyr)
 library(rdwd)
+library(ggplot2)
 
 # Reads and cleans the data
 dat <- read.csv("Clean_Stream_Database_2015_2022_DAR - DATABASE.csv")
@@ -53,3 +54,21 @@ leaflet(data = cdat[1:length(cdat$species), ]) %>%
 addProviderTiles(providers$Esri.WorldImagery) %>%
 addMarkers(label = ~location,
            popup = genspcount)
+
+ggplot(data = sdat[sdat$species == "Amatitlania nigrofasciata",], aes(x = date, y = count, col = species)) +
+    geom_bar(stat = "identity")
+
+ggplot(data = sdat[sdat$species == "Amphilophus labiatus",], aes(x = date, y = count, col = species)) +
+    geom_bar(stat = "identity")
+
+ggplot(data = sdat[sdat$species == "Ancistrus temminckii",], aes(x = date, y = count, col = species)) +
+    geom_bar(stat = "identity")
+
+
+all_counts <- aggregate(count ~ date,
+                        data = sdat, FUN = sum)
+
+class(all_counts$count)
+
+ggplot(data = all_counts, aes(x = date, y = count)) +
+    geom_bar(stat = "identity")
